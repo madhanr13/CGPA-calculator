@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saveetha CGPA Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-100 via-blue-100 to-indigo-200 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl p-6 md:p-8 border border-white/30">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">SIMATS CGPA Calculator</h1>
+        <p class="text-center text-gray-600 mb-6">Enter the count for each grade you received.</p>
+
+        <form id="cgpaForm" onsubmit="return false;">
+            <div class="space-y-4">
+                
+                <div class="grid grid-cols-2 gap-x-4 gap-y-4">
+                    <div>
+                        <label for="sGrade" class="block text-sm font-medium text-gray-700">S Grade (10 Points)</label>
+                        <input type="number" id="sGrade" name="sGrade" min="0" placeholder="0"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg p-2.5">
+                    </div>
+
+                    <div>
+                        <label for="aGrade" class="block text-sm font-medium text-gray-700">A Grade (9 Points)</label>
+                        <input type="number" id="aGrade" name="aGrade" min="0" placeholder="0"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg p-2.5">
+                    </div>
+
+                    <div>
+                        <label for="bGrade" class="block text-sm font-medium text-gray-700">B Grade (8 Points)</label>
+                        <input type="number" id="bGrade" name="bGrade" min="0" placeholder="0"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg p-2.5">
+                    </div>
+
+                    <div>
+                        <label for="cGrade" class="block text-sm font-medium text-gray-700">C Grade (7 Points)</label>
+                        <input type="number" id="cGrade" name="cGrade" min="0" placeholder="0"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg p-2.5">
+                    </div>
+
+                    <div>
+                        <label for="dGrade" class="block text-sm font-medium text-gray-700">D Grade (6 Points)</label>
+                        <input type="number" id="dGrade" name="dGrade" min="0" placeholder="0"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg p-2.5">
+                    </div>
+
+                    <div>
+                        <label for="eGrade" class="block text-sm font-medium text-gray-700">E Grade (5 Points)</label>
+                        <input type="number" id="eGrade" name="eGrade" min="0" placeholder="0"
+                               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg p-2.5">
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <p class="text-center text-lg font-medium text-gray-700">
+                        Total Courses: <span id="totalCourses" class="font-bold text-indigo-700">0</span>
+                    </p>
+                </div>
+
+            </div>
+        </form>
+
+        <div id="resultArea" class="hidden mt-6 p-5 bg-indigo-50 rounded-lg border border-indigo-200">
+            <p id="resultText" class="text-center text-xl font-semibold text-indigo-800"></p>
+        </div>
+
+        <div class="mt-6">
+            <button type="button" onclick="resetForm()"
+                    class="w-full justify-center rounded-lg bg-gray-200 px-5 py-3 text-base font-semibold text-gray-700 shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all duration-200">
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            
+            const gradePoints = {
+                s: 10,
+                a: 9,
+                b: 8,
+                c: 7,
+                d: 6,
+                e: 5
+            };
+
+            const sGradeEl = document.getElementById('sGrade');
+            const aGradeEl = document.getElementById('aGrade');
+            const bGradeEl = document.getElementById('bGrade');
+            const cGradeEl = document.getElementById('cGrade');
+            const dGradeEl = document.getElementById('dGrade');
+            const eGradeEl = document.getElementById('eGrade');
+            
+            const resultAreaEl = document.getElementById('resultArea');
+            const resultTextEl = document.getElementById('resultText');
+            const totalCoursesEl = document.getElementById('totalCourses');
+
+            function updateCalculations() {
+                const sCount = parseInt(sGradeEl.value) || 0;
+                const aCount = parseInt(aGradeEl.value) || 0;
+                const bCount = parseInt(bGradeEl.value) || 0;
+                const cCount = parseInt(cGradeEl.value) || 0;
+                const dCount = parseInt(dGradeEl.value) || 0;
+                const eCount = parseInt(eGradeEl.value) || 0;
+
+                const totalSubjects = sCount + aCount + bCount + cCount + dCount + eCount;
+                totalCoursesEl.textContent = totalSubjects;
+
+                resultAreaEl.classList.remove('bg-red-50', 'border-red-200');
+                resultTextEl.classList.remove('text-red-800');
+                resultAreaEl.classList.add('bg-indigo-50', 'border-indigo-200');
+                resultTextEl.classList.add('text-indigo-800');
+
+                if (totalSubjects === 0) {
+                    resultAreaEl.classList.add('hidden');
+                    resultTextEl.innerHTML = '';
+                } else {
+                    const totalPoints = (sCount * gradePoints.s) +
+                                        (aCount * gradePoints.a) +
+                                        (bCount * gradePoints.b) +
+                                        (cCount * gradePoints.c) +
+                                        (dCount * gradePoints.d) +
+                                        (eCount * gradePoints.e);
+
+                    const cgpa = totalPoints / totalSubjects;
+                    resultTextEl.innerHTML = `Your CGPA is: <span class="font-bold text-2xl">${cgpa.toFixed(2)}</span>`;
+                    
+                    resultAreaEl.classList.remove('hidden');
+                }
+            }
+
+            function resetForm() {
+                document.getElementById('cgpaForm').reset();
+                resultAreaEl.classList.add('hidden');
+                resultTextEl.textContent = '';
+                totalCoursesEl.textContent = '0';
+                
+                resultAreaEl.classList.remove('bg-red-50', 'border-red-200', 'bg-indigo-50', 'border-indigo-200');
+                resultTextEl.classList.remove('text-red-800', 'text-indigo-800');
+            }
+            window.resetForm = resetForm;
+
+            const gradeInputs = [sGradeEl, aGradeEl, bGradeEl, cGradeEl, dGradeEl, eGradeEl];
+            gradeInputs.forEach(input => {
+                if (input) {
+                    input.addEventListener('input', updateCalculations);
+                } else {
+                    console.error("A grade input element was not found.");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
